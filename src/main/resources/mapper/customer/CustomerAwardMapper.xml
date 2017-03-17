@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.CustomerAwardMapper">
+  <resultMap id="resultMapCustomerAward" type="com.hzfh.api.p2pCustomer.model.CustomerAward">
+    <id column="id"  property="id" />
+    <result column="name"  property="name" />
+    <result column="award_value"  property="awardValue" />
+    <result column="validity"  property="validity" />
+    <result column="rate_value"  property="rateValue" />
+    <result column="product_scope"  property="productScope" />
+    <result column="first_invest"  property="firstInvest" />
+    <result column="type"  property="type" />
+    <result column="description"  property="description" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <sql id="columnList">
+    id, name, award_value as awardValue, validity, rate_value as rateValue, product_scope as productScope,first_invest as firstInvest, type, description, create_time as createTime, update_time as updateTime
+  </sql>
+    
+  <select id="getInfo" resultMap="resultMapCustomerAward" >
+    select 
+    <include refid="columnList" />
+    from customer_award
+    where id = #{id}
+  </select>
+  
+  <select id = "getInfoByAwardValue" resultMap = "resultMapCustomerAward">
+  	select 
+  		 <include refid="columnList" />
+  	from customer_award
+	where award_value = #{awardValue} and name like '%颜值%';
+  </select>
+	
+	
+</mapper>

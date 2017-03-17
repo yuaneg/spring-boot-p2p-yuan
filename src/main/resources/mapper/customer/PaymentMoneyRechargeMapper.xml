@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.PaymentMoneyRechargeMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.PaymentMoneyRecharge" id="resultMapPaymentMoneyRecharge">
+		<result property="id" column="id"/>
+		<result property="sn" column="sn"/>
+		<result property="customerNo" column="customer_no"/>
+		<result property="payType" column="pay_type"/>
+		<result property="amount" column="amount"/>
+		<result property="state" column="state"/>
+		<result property="bankTime" column="bank_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="channelNo" column="channel_no"/>
+		<result property="factorage" column="factorage"/>
+		<result property="payParty" column="pay_party"/>
+		<result property="comment" column="comment"/>
+		<result property="timeCreate" column="time_create" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapPaymentMoneyRecharge">
+		SELECT id,sn,customer_no,pay_type,amount,state,bank_time,channel_no,factorage,pay_party,comment,time_create
+		FROM payment_money_recharge
+	</select>
+	<select id="getPagingList" resultMap="resultMapPaymentMoneyRecharge" parameterType="com.hzfh.api.p2pCustomer.model.query.PaymentMoneyRechargeCondition" statementType="STATEMENT">
+		SELECT id,sn,customer_no,pay_type,amount,state,bank_time,channel_no,factorage,pay_party,comment,time_create FROM payment_money_recharge where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pCustomer.model.query.PaymentMoneyRechargeCondition" statementType="STATEMENT">
+		SELECT count(1) FROM payment_money_recharge where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapPaymentMoneyRecharge" parameterType="int">
+		SELECT id,sn,customer_no,pay_type,amount,state,bank_time,channel_no,factorage,pay_party,comment,time_create FROM payment_money_recharge where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.PaymentMoneyRecharge" useGeneratedKeys="true" keyProperty="id">
+		insert into payment_money_recharge
+		(sn,customer_no,pay_type,amount,state,bank_time,channel_no,factorage,pay_party,comment,time_create)
+		values
+		(#{sn},#{customerNo},#{payType},#{amount},#{state},#{bankTime},#{channelNo},#{factorage},#{payParty},#{comment},current_timestamp())
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.PaymentMoneyRecharge">
+		update payment_money_recharge set 
+		sn=#{sn},customer_no=#{customerNo},pay_type=#{payType},amount=#{amount},state=#{state},bank_time=#{bankTime},channel_no=#{channelNo},factorage=#{factorage},pay_party=#{payParty},comment=#{comment},time_create=#{timeCreate}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from payment_money_recharge where id = #{id}
+	</delete>
+	<select id="getInfoBySn" resultMap="resultMapPaymentMoneyRecharge">
+		SELECT id,sn,customer_no,pay_type,amount,state,bank_time,channel_no,factorage,pay_party,comment,time_create 
+		FROM payment_money_recharge where sn=#{sn}
+	</select>
+	<update id="updateStateBySn">
+		update payment_money_recharge set 
+		state=#{state},comment = '充值成功'
+		where sn=#{sn}
+	</update>
+</mapper>

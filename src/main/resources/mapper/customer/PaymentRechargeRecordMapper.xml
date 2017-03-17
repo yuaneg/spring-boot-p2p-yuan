@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.PaymentRechargeRecordMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.PaymentRechargeRecord" id="resultMapPaymentRechargeRecord">
+		<result property="id" column="id"/>
+		<result property="rechargeNo" column="recharge_no"/>
+		<result property="sn" column="sn"/>
+		<result property="status" column="status"/>
+		<result property="timeCreate" column="time_create" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="comment" column="comment"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapPaymentRechargeRecord">
+		SELECT id,recharge_no,sn,status,time_create,comment
+		FROM payment_recharge_record
+	</select>
+	<select id="getPagingList" resultMap="resultMapPaymentRechargeRecord" parameterType="com.hzfh.api.p2pCustomer.model.query.PaymentRechargeRecordCondition" statementType="STATEMENT">
+		SELECT id,recharge_no,sn,status,time_create,comment FROM payment_recharge_record where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pCustomer.model.query.PaymentRechargeRecordCondition" statementType="STATEMENT">
+		SELECT count(1) FROM payment_recharge_record where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapPaymentRechargeRecord" parameterType="int">
+		SELECT id,recharge_no,sn,status,time_create,comment FROM payment_recharge_record where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.PaymentRechargeRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into payment_recharge_record
+		(recharge_no,sn,status,time_create,comment)
+		values
+		(#{rechargeNo},#{sn},#{status},current_timestamp(),#{comment})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.PaymentRechargeRecord">
+		update payment_recharge_record set 
+		recharge_no=#{rechargeNo},sn=#{sn},status=#{status},time_create=#{timeCreate},comment=#{comment}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from payment_recharge_record where id = #{id}
+	</delete>
+</mapper>

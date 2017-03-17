@@ -1,0 +1,10 @@
+spring:
+ profiles.active: expand
+ aop.auto: true
+pageHelper:
+ offsetAsPageNum: true
+ rowBoundsWithCount: true
+ reasonable: false
+logging:
+  config: classpath:log4j.properties
+  

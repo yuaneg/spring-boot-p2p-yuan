@@ -1,0 +1,39 @@
+profile: expand_envrimont
+db:
+ driverClassName: com.mysql.jdbc.Driver
+ product:
+  url: jdbc:mysql://172.16.27.201:3306/p2p_product?useUnicode=true&characterEncoding=UTF8
+  username: root
+  password: HuaZhen@2016
+  typeAliasesPackage: com.hzfh.api.p2pProduct.model
+  mybatisConfigLocation: classpath:/mapper/product/*.xml
+ customer:
+  url: jdbc:mysql://172.16.27.201:3306/p2p_customer?useUnicode=true&characterEncoding=UTF8
+  username: root
+  password: HuaZhen@2016
+  typeAliasesPackage: com.hzfh.api.p2pCustomer.model
+  mybatisConfigLocation: classpath:/mapper/customer/*.xml
+ front:
+  url: jdbc:mysql://172.16.27.201:3306/p2p_front?useUnicode=true&characterEncoding=UTF8
+  username: root
+  password: HuaZhen@2016
+  typeAliasesPackage: com.hzfh.api.p2pFront.model
+  mybatisConfigLocation: classpath:/mapper/front/*.xml
+ order:
+  url: jdbc:mysql://172.16.27.201:3306/p2p_order?useUnicode=true&characterEncoding=UTF8
+  username: root
+  password: HuaZhen@2016
+  typeAliasesPackage: com.hzfh.api.p2pOrder.model
+  mybatisConfigLocation: classpath:/mapper/order/*.xml
+ payment:
+  url: jdbc:mysql://172.16.27.201:3306/p2p_payment?useUnicode=true&characterEncoding=UTF8
+  username: root
+  password: HuaZhen@2016
+  typeAliasesPackage: com.hzfh.api.p2pPayment.model
+  mybatisConfigLocation: classpath:/mapper/payment/*.xml
+ system:
+  url: jdbc:mysql://172.16.27.201:3306/p2p_system?useUnicode=true&characterEncoding=UTF8
+  username: root
+  password: HuaZhen@2016
+  typeAliasesPackage: com.hzfh.api.p2pSystem.model
+  mybatisConfigLocation: classpath:/mapper/system/*.xml

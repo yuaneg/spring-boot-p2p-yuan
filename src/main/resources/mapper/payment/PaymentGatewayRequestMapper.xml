@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.payment.mapper.PaymentGatewayRequestMapper">
+	<resultMap type="com.hzfh.api.p2pPayment.model.PaymentGatewayRequest" id="resultMapPaymentGatewayRequest">
+		<result property="id" column="id"/>
+		<result property="url" column="url"/>
+		<result property="param" column="param"/>
+		<result property="reqTime" column="req_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="sn" column="sn"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapPaymentGatewayRequest">
+		SELECT id,url,param,req_time,sn
+		FROM payment_gateway_request
+	</select>
+	<select id="getPagingList" resultMap="resultMapPaymentGatewayRequest" parameterType="com.hzfh.api.p2pPayment.model.query.PaymentGatewayRequestCondition" statementType="STATEMENT">
+		SELECT id,url,param,req_time,sn FROM payment_gateway_request where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pPayment.model.query.PaymentGatewayRequestCondition" statementType="STATEMENT">
+		SELECT count(1) FROM payment_gateway_request where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapPaymentGatewayRequest" parameterType="int">
+		SELECT id,url,param,req_time,sn FROM payment_gateway_request where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pPayment.model.PaymentGatewayRequest" useGeneratedKeys="true" keyProperty="id">
+		insert into payment_gateway_request
+		(url,param,req_time,sn)
+		values
+		(#{url},#{param},#{reqTime},#{sn})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pPayment.model.PaymentGatewayRequest">
+		update payment_gateway_request set 
+		url=#{url},param=#{param},req_time=#{reqTime},sn=#{sn}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from payment_gateway_request where id = #{id}
+	</delete>
+</mapper>

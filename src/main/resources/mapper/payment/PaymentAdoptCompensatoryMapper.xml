@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.order.mapper.PaymentAdoptCompensatoryMapper">
+	<resultMap type="com.hzfh.api.p2pPayment.model.PaymentAdoptCompensatory" id="resultMapPaymentAdoptCompensatory">
+		<result property="id" column="id"/>
+		<result property="productPaymentNo" column="product_payment_no"/>
+		<result property="productNo" column="product_no"/>
+		<result property="compensatoryAmount" column="compensatory_amount"/>
+		<result property="compensatoryTime" column="compensatory_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapPaymentAdoptCompensatory">
+		SELECT id,product_payment_no,product_no,compensatory_amount,compensatory_time FROM payment_adopt_compensatory
+	</select>
+	<select id="getPagingList" resultMap="resultMapPaymentAdoptCompensatory" parameterType="com.hzfh.api.p2pPayment.model.query.PaymentAdoptCompensatoryCondition" statementType="STATEMENT">
+		SELECT id,product_payment_no,product_no,compensatory_amount,compensatory_time FROM payment_adopt_compensatory where 1=1
+		ORDER BY ID DESC
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pPayment.model.query.PaymentAdoptCompensatoryCondition" statementType="STATEMENT">
+		SELECT count(1) FROM payment_adopt_compensatory where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapPaymentAdoptCompensatory" parameterType="int">
+		SELECT id,product_payment_no,product_no,compensatory_amount,compensatory_time FROM payment_adopt_compensatory where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pPayment.model.PaymentAdoptCompensatory" useGeneratedKeys="true" keyProperty="id">
+		insert into payment_adopt_compensatory
+		(product_payment_no,product_no,compensatory_amount,compensatory_time)
+		values
+		(#{productPaymentNo},#{productNo},#{compensatoryAmount},#{compensatoryTime})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pPayment.model.PaymentAdoptCompensatory">
+		update payment_adopt_compensatory set 
+		product_payment_no=#{productPaymentNo},product_no=#{productNo},compensatory_amount=#{compensatoryAmount},compensatory_time=#{compensatoryTime}
+		where id=#{id}
+	</update>
+	<select id="getInfoByPaymentNo" resultMap="resultMapPaymentAdoptCompensatory">
+		SELECT id,product_payment_no,product_no,compensatory_amount,compensatory_time FROM payment_adopt_compensatory where product_payment_no = #{productPaymentNo}
+	</select>
+	
+</mapper>

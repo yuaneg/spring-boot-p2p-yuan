@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.CustomerMapper">
+    <resultMap type="com.hzfh.api.p2pCustomer.model.Customer" id="resultMapCustomer">
+        <result property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="registerTime" column="register_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+        <result property="secretKey" column="secret_key"/>
+        <result property="customerType" column="customer_type"/>
+        <result property="state" column="state"/>
+        <result property="currentLoginTime" column="current_login_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+        <result property="email" column="email"/>
+        <result property="cellphone" column="cellphone"/>
+        <result property="qq" column="qq"/>
+        <result property="weixin" column="weixin"/>
+        <result property="weibo" column="weibo"/>
+        <result property="realName" column="real_name"/>
+        <result property="cardType" column="card_type"/>
+        <result property="cardNumber" column="card_number"/>
+        <result property="referralCode" column="referral_code"/>
+        <result property="accountPwd" column="account_pwd"/>
+        <result property="authenticationEmail" column="authentication_email"/>
+        <result property="authenticationReal" column="authentication_real"/>
+        <result property="authenticationBankCard" column="authentication_bank_card"/>
+        <result property="authenticationTel" column="authentication_tel"/>
+        <result property="authenticationTime" column="authentication_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+        <result property="moneyAmount" column="money_amount"/>
+        <result property="availableAmount" column="available_amount"/>
+        <result property="moneyFreeze" column="money_freeze"/>
+        <result property="birthday" column="birthday" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+        <result property="sex" column="sex"/>
+        <result property="provinceNo" column="province_no"/>
+        <result property="cityNo" column="city_no"/>
+        <result property="districtNo" column="district_no"/>
+        <result property="address" column="address"/>
+        <result property="avatar" column="avatar"/>
+        <result property="inviterNo" column="inviter_no"/>
+        <result property="platformNo" column="platform_no"/>
+        <result property="platformUserNo" column="platform_user_no"/>
+        <result property="sn" column="sn"/>
+        <result property="activation" column="activation"/>
+        <result property="riskAssessment" column="risk_assessment"/>
+        <result property="isStaff" column="is_staff"/>
+        <result property="isTest" column="is_test"/>
+        <result property="vipType" column="vip_type"/>
+        <result property="authorisedState" column="authorised_state"/>
+    </resultMap>
+    <select id="getInfo" resultMap="resultMapCustomer" parameterType="int">
+        SELECT id,user_name,password,register_time,secret_key,customer_type,state,current_login_time,last_login_time,email,cellphone,qq,weixin,weibo,real_name,card_type,card_number,referral_code,account_pwd,authentication_email,authentication_real,authentication_bank_card,authentication_tel,authentication_time,money_amount,available_amount,money_freeze,birthday,sex,province_no,city_no,district_no,address,avatar,inviter_no,platform_no,platform_user_no,sn,activation,risk_assessment,is_staff,is_test,vip_type,authorised_state FROM customer where id=#{id}
+    </select>
+    <select id="getInfoByCellphone" resultMap="resultMapCustomer">
+        SELECT id,user_name,password,register_time,secret_key,customer_type,state,current_login_time,last_login_time,email,cellphone,qq,weixin,weibo,real_name,card_type,card_number,referral_code,account_pwd,authentication_email,authentication_real,authentication_bank_card,authentication_tel,authentication_time,money_amount,available_amount,money_freeze,birthday,sex,province_no,city_no,district_no,address,avatar,inviter_no,platform_no,platform_user_no,sn,activation,risk_assessment,is_staff,is_test,vip_type
+        FROM customer where cellphone = #{cellphone}
+    </select>
+    <select id="getCustomerInfoByEmail" resultMap="resultMapCustomer">
+        SELECT id,user_name,password,register_time,secret_key,customer_type,state,current_login_time,last_login_time,email,cellphone,qq,weixin,weibo,real_name,card_type,card_number,referral_code,account_pwd,authentication_email,authentication_real,authentication_bank_card,authentication_tel,authentication_time,money_amount,available_amount,money_freeze,birthday,sex,province_no,city_no,district_no,address,avatar,inviter_no,platform_no,platform_user_no,sn,activation,risk_assessment,is_staff,is_test,vip_type
+        FROM customer where email = #{email} 
+    </select>
+    <select id="getInfoByTypeAndCardnumberAndId" resultMap="resultMapCustomer">
+		SELECT id,user_name,password,register_time,secret_key,customer_type,state,current_login_time,last_login_time,email,cellphone,qq,weixin,weibo,real_name,card_type,card_number,referral_code,account_pwd,authentication_email,authentication_real,authentication_bank_card,authentication_tel,authentication_time,money_amount,available_amount,money_freeze,birthday,sex,province_no,city_no,district_no,address,avatar,inviter_no,platform_no,platform_user_no,sn,activation,risk_assessment,is_staff,is_test,vip_type
+		FROM customer where customer_type = #{customerType}  and card_number = #{cardNumber} and id &lt;&gt; #{customerNo}
+	</select>
+	
+	<select id="getPersonalInfoByIdCardNo" resultMap="resultMapCustomer">
+		SELECT id,user_name,password,register_time,secret_key,customer_type,state,current_login_time,last_login_time,email,cellphone,qq,weixin,weibo,real_name,card_type,card_number,referral_code,account_pwd,authentication_email,authentication_real,authentication_bank_card,authentication_tel,authentication_time,money_amount,available_amount,money_freeze,birthday,sex,province_no,city_no,district_no,address,avatar,inviter_no,platform_no,platform_user_no,sn,activation,risk_assessment,is_staff,is_test,vip_type
+		FROM customer where card_number = #{idCardNo}
+	</select>
+    <insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.Customer" useGeneratedKeys="true" keyProperty="id">
+		insert into customer
+		(user_name,password,register_time,secret_key,customer_type,state,current_login_time,last_login_time,email,cellphone,qq,weixin,weibo,real_name,card_type,card_number,referral_code,account_pwd,authentication_email,authentication_real,authentication_bank_card,authentication_tel,authentication_time,money_amount,available_amount,money_freeze,birthday,sex,province_no,city_no,district_no,address,avatar,inviter_no,platform_no,platform_user_no,sn,activation,risk_assessment)
+		values
+		(#{userName},#{password},#{registerTime},#{secretKey},#{customerType},#{state},#{currentLoginTime},#{lastLoginTime},#{email},#{cellphone},#{qq},#{weixin},#{weibo},#{realName},#{cardType},#{cardNumber},#{referralCode},#{accountPwd},#{authenticationEmail},#{authenticationReal},#{authenticationBankCard},#{authenticationTel},#{authenticationTime},#{moneyAmount},#{availableAmount},#{moneyFreeze},#{birthday},#{sex},#{provinceNo},#{cityNo},#{districtNo},#{address},#{avatar},#{inviterNo},#{platformNo},#{platformUserNo},#{sn},#{activation},#{riskAssessment})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.Customer">
+		update customer set 
+		user_name=#{userName},password=#{password},register_time=#{registerTime},secret_key=#{secretKey},customer_type=#{customerType},state=#{state},current_login_time=#{currentLoginTime},last_login_time=#{lastLoginTime},email=#{email},cellphone=#{cellphone},qq=#{qq},weixin=#{weixin},weibo=#{weibo},real_name=#{realName},card_type=#{cardType},card_number=#{cardNumber},referral_code=#{referralCode},account_pwd=#{accountPwd},authentication_email=#{authenticationEmail},authentication_real=#{authenticationReal},authentication_bank_card=#{authenticationBankCard},authentication_tel=#{authenticationTel},authentication_time=#{authenticationTime},money_amount=#{moneyAmount},available_amount=#{availableAmount},money_freeze=#{moneyFreeze},birthday=#{birthday},sex=#{sex},province_no=#{provinceNo},city_no=#{cityNo},district_no=#{districtNo},address=#{address},avatar=#{avatar},inviter_no=#{inviterNo},platform_no=#{platformNo},platform_user_no=#{platformUserNo},sn=#{sn},activation=#{activation},risk_assessment=#{riskAssessment}
+		where id=#{id}
+	</update>
+	<update id="updateBindCard">
+		UPDATE customer 
+		SET authentication_bank_card = #{status}
+		WHERE id = #{id}
+	</update>
+	<update id="updateCustomerCardNumber">
+		UPDATE customer 
+		SET card_number = #{cardNumber}
+		WHERE id = #{id}
+	</update>
+	<select id="getCellphoneById" resultMap="resultMapCustomer" parameterType = "int">
+        SELECT id,cellphone,real_name FROM customer
+        WHERE id = #{customerNo};
+    </select>
+    <select id="getAvailableAmountApp" resultType = "BigDecimal" parameterType = "int">
+		select available_amount from customer
+		where id = #{customerId}
+	</select>
+	 <select id="getAvailableAmountPC" resultType = "BigDecimal" parameterType = "int">
+		select available_amount from customer
+		where id = #{customerId}
+	</select>
+	<select id="getMoneyAmount" resultType = "BigDecimal" parameterType = "int">
+		select money_amount from customer
+		where id = #{customerId}
+	</select>
+	<update id="freezeCustomerMoney">
+		UPDATE customer set available_amount = available_amount - #{money} ,money_freeze = money_freeze + #{money} WHERE id = #{customerId}
+	</update>
+	<update id="unFreezeCustomerMoney">
+		UPDATE customer set money_amount = money_amount - #{money} ,money_freeze = money_freeze - #{money} WHERE id = #{customerId}
+	</update>
+	<update id ="updateCellphoneById">
+		update customer
+		set cellphone = #{cellphone}
+		where id = #{id}
+	</update>
+		
+	<update id="addCustomerMoney">
+		UPDATE customer SET money_amount = money_amount + #{money} ,available_amount = available_amount + #{money} WHERE id = #{customerId}	
+	</update>
+	
+	<update id = "autoRepaymentAuthorization">
+		update customer
+		set authorised_state = 1
+		where id = #{id}
+	</update>
+	
+	<select id="getUserList" resultMap="resultMapCustomer" >
+		SELECT id,real_name,card_number from customer 
+    </select>
+	
+	<update id="activationCustomer">
+		UPDATE customer 
+		SET activation = #{activation}
+		WHERE id = #{id}
+	
+	</update>
+	
+	<update id="updateSecretKey">
+		UPDATE customer 
+		SET secret_key = #{secretKey}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

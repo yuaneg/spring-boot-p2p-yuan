@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.CustomerCompanyExtendMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.CustomerCompanyExtend" id="resultMapCustomerCompanyExtend">
+		<result property="id" column="id"/>
+		<result property="customerNo" column="customer_no"/>
+		<result property="enterprisesName" column="enterprises_name"/>
+		<result property="bankLicense" column="bank_license"/>
+		<result property="unifiedCode" column="unified_code"/>
+		<result property="organizationNo" column="organization_no"/>
+		<result property="businessLicense" column="business_license"/>
+		<result property="taxNo" column="tax_no"/>
+		<result property="contact" column="contact"/>
+		<result property="legal" column="legal"/>
+		<result property="legalIdCardNo" column="legal_id_card_no"/>
+		<result property="creditCode" column="credit_code"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapCustomerCompanyExtend">
+		SELECT id,customer_no,enterprises_name,bank_license,unified_code,organization_no,business_license,tax_no,contact,legal,legal_id_card_no,credit_code
+		FROM customer_company_extend
+	</select>
+	<select id="getPagingList" resultMap="resultMapCustomerCompanyExtend" parameterType="com.hzfh.api.p2pCustomer.model.query.CustomerCompanyExtendCondition" statementType="STATEMENT">
+		SELECT id,customer_no,enterprises_name,bank_license,unified_code,organization_no,business_license,tax_no,contact,legal,legal_id_card_no,credit_code FROM customer_company_extend where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pCustomer.model.query.CustomerCompanyExtendCondition" statementType="STATEMENT">
+		SELECT count(1) FROM customer_company_extend where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapCustomerCompanyExtend" parameterType="int">
+		SELECT id,customer_no,enterprises_name,bank_license,unified_code,organization_no,business_license,tax_no,contact,legal,legal_id_card_no,credit_code FROM customer_company_extend where id=#{id}
+	</select>
+	<select id="getInfoByCustomerNo" resultMap="resultMapCustomerCompanyExtend" parameterType="int">
+		SELECT id,customer_no,enterprises_name,bank_license,unified_code,organization_no,business_license,tax_no,contact,legal,legal_id_card_no,credit_code FROM customer_company_extend where customer_no=#{customerNo}
+	</select>
+	<select id="getInfoByCustomerName" resultMap="resultMapCustomerCompanyExtend">
+		SELECT id,customer_no,enterprises_name,bank_license,unified_code,organization_no,business_license,tax_no,contact,legal,legal_id_card_no,credit_code FROM customer_company_extend where enterprises_name=#{enterpriseName}
+	</select>
+	<select id="getInfoByCustomerOrgNoByState" resultMap="resultMapCustomerCompanyExtend">
+		SELECT ce.id,ce.customer_no,ce.enterprises_name,ce.bank_license,ce.unified_code,ce.organization_no,ce.business_license,ce.tax_no,contact,ce.legal,ce.legal_id_card_no,ce.credit_code 
+		FROM customer_company_extend ce,customer c
+		where ce.organization_no=#{orgNo}
+		and c.state not IN(0,4)
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.CustomerCompanyExtend" useGeneratedKeys="true" keyProperty="id">
+		insert into customer_company_extend
+		(customer_no,enterprises_name,bank_license,unified_code,organization_no,business_license,tax_no,contact,legal,legal_id_card_no,credit_code)
+		values
+		(#{customerNo},#{enterprisesName},#{bankLicense},#{unifiedCode},#{organizationNo},#{businessLicense},#{taxNo},#{contact},#{legal},#{legalIdCardNo},#{creditCode})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.CustomerCompanyExtend">
+		update customer_company_extend set 
+		customer_no=#{customerNo},enterprises_name=#{enterprisesName},bank_license=#{bankLicense},unified_code=#{unifiedCode},organization_no=#{organizationNo},business_license=#{businessLicense},tax_no=#{taxNo},contact=#{contact},legal=#{legal},legal_id_card_no=#{legalIdCardNo},credit_code=#{creditCode}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from customer_company_extend where id = #{id}
+	</delete>
+</mapper>

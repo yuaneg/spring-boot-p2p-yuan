@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.order.mapper.ProductPaymentPlanMapper">
+	<resultMap type="com.hzfh.api.p2pOrder.model.ProductPaymentPlan" id="resultMapProductPaymentPlan">
+		<result property="id" column="id"/>
+		<result property="productNo" column="product_no"/>
+		<result property="planPayTime" column="plan_pay_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="planInterest" column="plan_interest"/>
+		<result property="planPayMoney" column="plan_pay_money"/>
+		<result property="actualPayTime" column="actual_pay_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="actualPayMoney" column="actual_pay_money"/>
+		<result property="actualInterest" column="actual_interest"/>
+		<result property="type" column="type"/>
+		<result property="productMoney" column="product_money"/>
+		<result property="status" column="status"/>
+		<result property="inTime" column="in_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="inUserNo" column="in_user_no"/>
+		<result property="editTime" column="edit_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="editUserNo" column="edit_user_no"/>
+		<result property="sn" column="sn"/>
+		<result property="times" column="times"/>
+		<result property="productName" column="product_name"/>
+		<result property="borrowerNo" column="borrower_no"/>
+		<result property="borrowerName" column="borrower_name"/>
+		<result property="productType" column="product_type"/>
+		<result property="payType" column="pay_type"/>
+		<result property="breachMoney" column="breach_money"/>
+		<result property="penaltyInterest" column="penalty_interest"/>
+		<result property="freeze" column="freeze"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan
+	</select>
+	<select id="getPagingList" resultMap="resultMapProductPaymentPlan" parameterType="com.hzfh.api.p2pOrder.model.query.ProductPaymentPlanCondition" statementType="STATEMENT">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest FROM product_payment_plan where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pOrder.model.query.ProductPaymentPlanCondition" statementType="STATEMENT">
+		SELECT count(1) FROM product_payment_plan where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapProductPaymentPlan" parameterType="int">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest,freeze FROM product_payment_plan where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pOrder.model.ProductPaymentPlan" useGeneratedKeys="true" keyProperty="id">
+		insert into product_payment_plan
+		(product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest)
+		values
+		(#{productNo},#{planPayTime},#{planInterest},#{planPayMoney},#{actualPayTime},#{actualPayMoney},#{actualInterest},#{type},#{productMoney},#{status},current_timestamp(),#{inUserNo},current_timestamp(),#{editUserNo},#{sn},#{times},#{productName},#{borrowerNo},#{borrowerName},#{productType},#{payType},#{breachMoney},#{penaltyInterest})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pOrder.model.ProductPaymentPlan">
+		update product_payment_plan set freeze = #{freeze},
+		product_no=#{productNo},plan_pay_time=#{planPayTime},plan_interest=#{planInterest},plan_pay_money=#{planPayMoney},actual_pay_time=#{actualPayTime},actual_pay_money=#{actualPayMoney},actual_interest=#{actualInterest},type=#{type},product_money=#{productMoney},status=#{status},edit_time=current_timestamp(),edit_user_no=#{editUserNo},sn=#{sn},times=#{times},product_name=#{productName},borrower_no=#{borrowerNo},borrower_name=#{borrowerName},product_type=#{productType},pay_type=#{payType},breach_money=#{breachMoney},penalty_interest=#{penaltyInterest}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from product_payment_plan where id = #{id}
+	</delete>
+	<select id="getActualPayMoneyByProductNoAndStatus" resultType="BigDecimal" >
+		SELECT sum(actual_pay_money) FROM `product_payment_plan` WHERE product_no=#{productNo} AND `status` IN(#{statusStr}) ;
+	</select>
+	<select id="getLaterForReimbursement" resultMap="resultMapProductPaymentPlan"  >
+		SELECT * FROM product_payment_plan WHERE product_no = #{productNo}  and `status` = #{status} and times !=0 ORDER BY times ASC limit 1
+	</select>
+	<select id="getUnderTheExpectedAmount" resultType="BigDecimal" >
+		SELECT SUM(actual_pay_money) FROM product_payment_plan WHERE product_no = #{productNo}  and actual_pay_time =#{actualPayTime}
+	</select>
+	<select id="getTotalPeriods" resultType="int"  >
+		SELECT count(1) FROM product_payment_plan WHERE product_no = #{productNo} and times!=0
+	</select>
+	<select id="getRestPeriods" resultType="int"  >
+		SELECT count(1) FROM product_payment_plan WHERE product_no = #{productNo} and times!=0 and `status` = #{status}
+	</select>
+	<select id="getListByTimeAndProductNo"  resultMap="resultMapProductPaymentPlan" >
+		SELECT id,product_no,plan_pay_time,plan_interest,actual_pay_time,actual_interest,type,product_money,status,in_time,
+in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,
+SUM(plan_pay_money) plan_pay_money,SUM(actual_pay_money) actual_pay_money,SUM(breach_money) breach_money,SUM(penalty_interest) penalty_interest
+ FROM `product_payment_plan` where product_no=#{productNo} GROUP BY ${time}  ORDER BY times ;
+	</select>
+	<select id="getLastProductPaymentPlan" resultMap="resultMapProductPaymentPlan" >
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest FROM product_payment_plan 
+		WHERE product_no = #{productNo} and status!=#{status} and times!=0 ORDER BY times DESC LIMIT 1;
+	</select>
+	<select id="getPreviousProductPaymentPlan" resultMap="resultMapProductPaymentPlan" >
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest FROM product_payment_plan 
+		WHERE product_no = #{productNo} and status=#{status} and times!=0 ORDER BY times DESC LIMIT 1;
+	</select>
+	<select id="getInfoByProductNoAndDateAndTimes" resultMap="resultMapProductPaymentPlan" >
+		SELECT id,product_no,plan_pay_time,plan_interest,actual_pay_time,actual_interest,type,product_money,status,in_time,
+in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,
+SUM(plan_pay_money) plan_pay_money,SUM(actual_pay_money) actual_pay_money,SUM(breach_money) breach_money,SUM(penalty_interest) penalty_interest
+ FROM `product_payment_plan` WHERE product_no=#{productNo} GROUP BY ${date} HAVING times=#{times}
+	</select>
+	<select id="getPaymentRecordList" resultMap="resultMapProductPaymentPlan" >
+		SELECT id,product_no,plan_pay_time,plan_interest,actual_pay_time,actual_interest,type,product_money,status,in_time,
+in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,
+SUM(plan_pay_money) plan_pay_money,SUM(actual_pay_money) actual_pay_money,SUM(breach_money) breach_money,SUM(penalty_interest) penalty_interest
+ FROM `product_payment_plan` WHERE product_no=#{productNo} AND type IN(1,2) GROUP BY ${time} ORDER BY times ASC;
+	</select>
+	<select id="getListByProductNoAndActualPayTime" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan where product_no=#{productNo} and actual_pay_time = #{date} and status in (0,25,35)
+	</select>
+	<select id="getListBySn" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan where sn=#{sn} 
+	</select>
+	<select id="getInfoByProductNoAndTypeAndSn" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan where sn=#{sn} and product_no=#{productNo} and type=#{type}
+	</select>
+	<select id="getNowPeriodsBySn" resultType="int">
+		SELECT times FROM `product_payment_plan` WHERE sn= #{sn} GROUP BY sn;
+	</select>
+	
+	<select id="searchProductPaymentPlan" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan where product_no = #{productId} order by plan_pay_time asc
+	</select>
+	
+	<select id="searchProductPaymentPlanAPP" resultType="map">
+		SELECT actual_pay_time AS planPayTime, sum(actual_pay_money) AS planPayMoney, sum(actual_interest) AS planInterest,`status` AS status 
+		FROM product_payment_plan where product_no = #{productId} group by actual_pay_time order  by actual_pay_time asc
+	</select>
+	
+	<select id="getInfoByTypeAndSn" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest,freeze
+		FROM product_payment_plan where sn=#{sn} and type=#{type}
+	</select>
+	<select id="getListByFreezeAndStatusGroubBySn" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest,freeze
+		FROM product_payment_plan where freeze=#{freeze} and status=#{status} and sn!="" and sn is not null and to_days(actual_pay_time ) = to_days(now()) GROUP BY sn ORDER BY id ASC;
+	</select>
+	
+	<select id="getListByFreezeAndStatus" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest,freeze
+		FROM product_payment_plan where freeze=#{freeze} and status=#{status} and sn!="" and sn is not null and to_days(actual_pay_time ) = to_days(now()) ORDER BY id ASC;
+	</select>
+	
+	<select id="updateStatusById">
+		UPDATE product_payment_plan set `status` = #{status} where id = #{id}
+	</select>
+	
+	<select id="selectLastProductPaymentPlan" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan
+		where product_no = #{productNo} and type = 2
+	</select>
+	
+	<update id="updateStatusAndTimeLateFeePenalty" >
+		UPDATE product_payment_plan set actual_pay_time = #{time},penalty_interest = #{pen},late_fee = #{lateFee},`status` = 40 WHERE id = #{id}
+	</update>
+	<update id="updateStatusAndTimeLateFeePnealtyForPlatform" >
+		UPDATE product_payment_plan set actual_pay_time = current_timestamp(),penalty_interest = #{pen},late_fee = #{lateFee},`status` = #{status} WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getInfoByProductNoAndTimes" resultMap="resultMapProductPaymentPlan">
+		SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,actual_interest,type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,breach_money,penalty_interest
+		FROM product_payment_plan
+		where product_no = #{productNo} and type = #{type} and times = #{times}
+	</select>
+	
+	<update id="updateActualPayTimeById" >
+  		update product_payment_plan set
+        actual_pay_time=#{date}
+        where id=#{id}	
+     </update>
+    <select id="getLatelySuccessByProductNo" resultMap="resultMapProductPaymentPlan">
+       SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,type,actual_pay_money,actual_interest,breach_money,penalty_interest,type,
+       type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,is_test 
+       FROM product_payment_plan
+       WHERE product_no=#{productNo} and status = 20
+       ORDER BY plan_pay_time DESC limit 1
+   </select>
+   
+    <select id="getListByPrductNoAndStatus" resultMap="resultMapProductPaymentPlan">
+        SELECT id,product_no,plan_pay_time,plan_interest,plan_pay_money,actual_pay_time,actual_pay_money,type,actual_interest,breach_money,penalty_interest,
+        type,product_money,status,in_time,in_user_no,edit_time,edit_user_no,sn,times,product_name,borrower_no,borrower_name,product_type,pay_type,is_test 
+        FROM product_payment_plan
+        WHERE product_no=#{productNo} and status=#{status} and type=#{type}
+        ORDER BY plan_pay_time
+    </select>
+   	
+   	<update id="updateStatusAbandon" >
+  		update product_payment_plan set breach_money = #{breachMoney},actual_pay_money = #{breachMoney},sn = null,actual_pay_time = current_time()
+        where product_no=#{productNo} and type = #{type} and status=#{status}
+     </update>
+   
+   
+</mapper>

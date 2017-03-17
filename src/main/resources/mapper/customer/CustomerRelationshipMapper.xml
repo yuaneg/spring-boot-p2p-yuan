@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.CustomerRelationshipMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.CustomerRelationship" id="resultMapCustomerRelationship">
+		<result property="id" column="id"/>
+		<result property="inviteUser" column="invite_user"/>
+		<result property="beInvitedUser" column="beInvited_user"/>
+		<result property="inviteUserType" column="invite_user_type"/>
+		<result property="registTime" column="regist_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="validityTime" column="validity_time"/>
+		<result property="dateState" column="date_state"/>
+		<result property="channelCode" column="channel_code"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapCustomerRelationship">
+		SELECT id,invite_user,beInvited_user,invite_user_type,regist_time,validity_time,date_state,channel_code
+		FROM customer_relationship
+		where 1=1
+		<if test="customerId!=0">and invite_user=${customerId}</if>
+			ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getPagingList" resultMap="resultMapCustomerRelationship" parameterType="com.hzfh.api.p2pCustomer.model.query.CustomerRelationshipCondition" statementType="STATEMENT">
+		SELECT id,invite_user,beInvited_user,invite_user_type,regist_time,validity_time,date_state,channel_code FROM customer_relationship where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pCustomer.model.query.CustomerRelationshipCondition" statementType="STATEMENT">
+		SELECT count(1) FROM customer_relationship where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapCustomerRelationship" parameterType="int">
+		SELECT id,invite_user,beInvited_user,invite_user_type,regist_time,validity_time,date_state,channel_code FROM customer_relationship where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.CustomerRelationship" useGeneratedKeys="true" keyProperty="id">
+		insert into customer_relationship
+		(invite_user,beInvited_user,invite_user_type,regist_time,validity_time,date_state,channel_code)
+		values
+		(#{inviteUser},#{beInvitedUser},#{inviteUserType},#{registTime},#{validityTime},#{dateState},#{channelCode})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.CustomerRelationship">
+		update customer_relationship set 
+		invite_user=#{inviteUser},beInvited_user=#{beInvitedUser},invite_user_type=#{inviteUserType},regist_time=#{registTime},validity_time=#{validityTime},date_state=#{dateState},channel_code=#{channelCode}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from customer_relationship where id = #{id}
+	</delete>
+	<select id="getTotalCountByInviteUser" resultType="long" >
+		SELECT count(1) FROM customer_relationship where 1=1 <if test="customerId!=0">and invite_user=${customerId}</if>
+	</select>
+	<select id="customerRelationshipListAll" resultType="map">
+		SELECT r.id,r.invite_user,r.beInvited_user,r.regist_time,c.cellphone,
+		IFNULL(SUM(a.order_amount)-f.first_waward_order_amount,0.00) as totleOrderAmount,
+		IFNULL(SUM(a.award_amount),0.00) as totleAwardAmount,
+		m.month_order_amount-monthOrder.month_first_order_amount as monthOrderAmount,
+		m.month_award_amount as monthAwardAmount,
+		f.first_award_amount as firstOrderAWard
+		FROM customer_relationship r LEFT JOIN customer_invite_award a ON r.beInvited_user=a.beInvited_user AND a.pay_state != -1 LEFT JOIN 
+		(SELECT r.id,r.invite_user,r.beInvited_user,r.regist_time,IFNULL(SUM(a.order_amount),0.00) as month_order_amount,IFNULL(SUM(a.award_amount),0.00) as month_award_amount
+		FROM customer_relationship r LEFT JOIN customer_invite_award a ON r.beInvited_user=a.beInvited_user and MONTH(a.order_time) = MONTH(NOW()) AND a.pay_state != -1
+		where 1=1
+		and r.invite_user=#{customerId}
+		GROUP BY r.beInvited_user
+		) m on r.beInvited_user=m.beInvited_user LEFT JOIN 
+		(SELECT r.id,r.invite_user,r.beInvited_user,r.regist_time,IFNULL(SUM(a.award_amount),0.00) as first_award_amount,IFNULL(SUM(a.order_amount),0.00) as first_waward_order_amount
+		FROM customer_relationship r LEFT JOIN customer_invite_award a ON r.beInvited_user=a.beInvited_user and a.invite_award_type=2 and a.pay_state != -1
+		where 1=1
+		and r.invite_user=${customerId}
+		group by r.beInvited_user) f on r.beInvited_user=f.beInvited_user 
+		LEFT JOIN (
+		SELECT
+		r.id,
+		r.invite_user,
+		r.beInvited_user,
+		r.regist_time,
+		IFNULL(SUM(a.order_amount), 0.00) AS month_first_order_amount		
+		FROM
+		customer_relationship r
+		LEFT JOIN customer_invite_award a ON r.beInvited_user = a.beInvited_user and a.pay_state != -1 AND a.invite_award_type = 2
+		AND MONTH (a.order_time) = MONTH (NOW())
+		WHERE
+			1 = 1
+		AND r.invite_user = ${customerId}
+		GROUP BY
+		r.beInvited_user) monthOrder on r.beInvited_user = monthOrder.beInvited_user
+		LEFT JOIN customer c on r.beInvited_user = c.id
+		where 1=1
+		and r.invite_user=${customerId}
+		GROUP BY r.beInvited_user
+		ORDER BY r.regist_time DESC
+		LIMIT #{startIndex},#{pageSize}
+	</select>
+	<select id="getRelationshipByBeInviteId" resultMap="resultMapCustomerRelationship" parameterType="int">
+		SELECT id,invite_user,beInvited_user,invite_user_type,regist_time,validity_time,date_state,channel_code 
+		FROM customer_relationship where beInvited_user=#{customerId}
+	</select>
+</mapper>

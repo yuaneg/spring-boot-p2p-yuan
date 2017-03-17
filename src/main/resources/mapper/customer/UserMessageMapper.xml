@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.UserMessageMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.UserMessage" id="resultMapUserMessage">
+		<result property="id" column="id"/>
+		<result property="customerId" column="customer_id"/>
+		<result property="creatTime" column="creat_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="messageTitle" column="message_title"/>
+		<result property="messageContent" column="message_content"/>
+		<result property="messageType" column="message_type"/>
+		<result property="busiType" column="busi_type"/>
+		<result property="busiTypeRemark" column="busi_type_remark"/>
+		<result property="remark" column="remark"/>
+		<result property="dataStatus" column="data_status"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapUserMessage" parameterType="com.hzfh.api.p2pCustomer.model.query.UserMessageCondition">
+		SELECT id,customer_id,creat_time,message_title,message_content,message_type,busi_type,busi_type_remark,remark,data_status
+		FROM user_message where 1=1
+		<if test="customerId != null and customerId>0">and customer_id = #{customerId}</if>
+		<if test="creatTime != null">and creat_time <![CDATA[> ]]> #{creatTime}</if>
+		<if test="messageType != null">and message_type = #{messageType}</if>
+		<if test="busiType != null and busiType != ''">and busi_type = #{busiType}</if>			
+	</select>
+	<select id="getListAPP"  resultType="map" >
+		SELECT id,creat_time as creatTime,message_title as messageTitle,message_type as messageType,busi_type as busiType
+		FROM user_message where 1=1
+		<if test="customerId != null and customerId>0">and customer_id = ${customerId}</if>
+		<if test="creatTime != null">and creat_time <![CDATA[> ]]> #{creatTime}</if>
+		<if test="messageType != null">and message_type = #{messageType}</if>
+		<if test="busiType != null">and busi_type = #{busiType}</if>			
+	</select>
+	<!-- <select id="getTotalCount" resultType="long">
+		SELECT count(1) FROM user_message where 1=1
+		<if test="customerId != null and customerId>0">and customer_id = #{customerId}</if>		
+	</select> -->
+	<!-- <select id="getPagingList" resultMap="resultMapUserMessage" parameterType="com.hzfh.api.p2pCustomer.model.query.UserMessageCondition" statementType="STATEMENT">
+		SELECT id,customer_id,creat_time,message_title,message_content,message_type,busi_type,busi_type_remark,remark,data_status FROM user_message where 1=1
+		<if test="customerId != null and customerId>0">and customer_id = ${customerId}</if>
+		<if test="creatTime != null">and creat_time &gt; ${creatTime}</if>
+		<if test="messageType != null">and message_type = ${messageType}</if>
+		<if test="busiType != null">and busi_type = ${busiType}</if>		
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from user_message where id = #{id}
+	</delete> -->
+	<select id="getInfo" resultMap="resultMapUserMessage" parameterType="int">
+		SELECT id,customer_id,creat_time,message_title,message_content,message_type,busi_type,busi_type_remark,remark,data_status 
+		FROM user_message 
+		where id=#{id}
+	</select>
+	<select id="getUserMessageDetailByIdAPP" resultType="map" parameterType="int">
+		SELECT id,customer_id,creat_time,message_title,message_content,message_type,busi_type
+		FROM user_message 
+		where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.UserMessage" useGeneratedKeys="true" keyProperty="id">
+		insert into user_message
+		(customer_id,creat_time,message_title,message_content,message_type,busi_type,busi_type_remark,remark,data_status)
+		values
+		(#{customerId},#{creatTime},#{messageTitle},#{messageContent},#{messageType},#{busiType},#{busiTypeRemark},#{remark},#{dataStatus})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.UserMessage">
+		update user_message set 
+		customer_id=#{customerId},creat_time=#{creatTime},message_title=#{messageTitle},message_content=#{messageContent},message_type=#{messageType},busi_type=#{busiType},busi_type_remark=#{busiTypeRemark},remark=#{remark},data_status=#{dataStatus}
+		where id=#{id}
+	</update>
+	<select id="isCustomerHasUnread"  parameterType="int"  resultType="String">
+		select 'x' from dual where exists( select 'X' from user_message where customer_id=#{customerId} AND message_type = 'unread' )
+	</select>
+	<update id="markRead">
+		update user_message set message_type='readed'
+		where message_type = 'unread' 
+		and creat_time <![CDATA[> ]]> #{creatTime}
+		<if test="customerId != null and customerId>0">and customer_id = #{customerId}</if>
+		<if test="busiType != null and busiType != ''">and busi_type = #{busiType}</if>	
+	</update>
+</mapper>

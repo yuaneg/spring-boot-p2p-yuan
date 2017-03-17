@@ -1,0 +1,8 @@
+profile: expand_envrimont
+db:
+ driverClassName: com.mysql.jdbc.Driver
+ url: jdbc:mysql://192.168.1.61:3307/p2p_customer?useUnicode=true&characterEncoding=UTF8
+ username: hztest_w
+ password: hztest@bestin4SmdLstqZc
+ typeAliasesPackage: com.hzfh.api.*.model
+ mybatisConfigLocation: classpath:/mapper/*/*.xml

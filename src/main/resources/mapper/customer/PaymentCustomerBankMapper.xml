@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.PaymentCustomerBankMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.PaymentCustomerBank" id="resultMapPaymentCustomerBank">
+		<result property="id" column="id"/>
+		<result property="sn" column="sn"/>
+		<result property="bankName" column="bank_name"/>
+		<result property="bankCode" column="bank_code"/>
+		<result property="bankCard" column="bank_card"/>
+		<result property="customerName" column="customer_name"/>
+		<result property="customerNo" column="customer_no"/>
+		<result property="inTime" column="in_time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="timeUpdate" column="time_update" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="state" column="state"/>
+		<result property="type" column="type"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapPaymentCustomerBank">
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state
+		FROM payment_customer_bank
+	</select>
+	<select id="getPagingList" resultMap="resultMapPaymentCustomerBank" parameterType="com.hzfh.api.p2pCustomer.model.query.PaymentCustomerBankCondition" statementType="STATEMENT">
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state FROM payment_customer_bank where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pCustomer.model.query.PaymentCustomerBankCondition" statementType="STATEMENT">
+		SELECT count(1) FROM payment_customer_bank where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapPaymentCustomerBank" parameterType="int">
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state,type FROM payment_customer_bank where id=#{id}
+	</select>
+	<select id="getInfoByBankcardNo" resultMap="resultMapPaymentCustomerBank" >
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state,type FROM payment_customer_bank where bank_card=#{bankcardNo}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.PaymentCustomerBank" useGeneratedKeys="true" keyProperty="id">
+		insert into payment_customer_bank
+		(sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state,type)
+		values
+		(#{sn},#{bankName},#{bankCode},#{bankCard},#{customerName},#{customerNo},current_timestamp(),#{timeUpdate},#{state},#{type})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.PaymentCustomerBank">
+		update payment_customer_bank set 
+		sn=#{sn},bank_name=#{bankName},bank_code=#{bankCode},bank_card=#{bankCard},customer_name=#{customerName},customer_no=#{customerNo},in_time=#{inTime},time_update=#{timeUpdate},state=#{state},type=#{type}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from payment_customer_bank where id = #{id}
+	</delete>
+	<select id="getInfoByCustomerNoAndState" resultMap="resultMapPaymentCustomerBank" parameterType="int">
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state,type 
+		FROM payment_customer_bank 
+		where customer_no=#{customerNo} and state=#{state}
+	</select>
+	<select id="getInfoBySn" resultMap="resultMapPaymentCustomerBank" >
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state,type 
+		FROM payment_customer_bank 
+		where sn=#{sn}
+	</select>
+	<select id="getValidBankByCustomerNo" resultMap="resultMapPaymentCustomerBank" parameterType="int">
+		SELECT id,sn,bank_name,bank_code,bank_card,customer_name,customer_no,in_time,time_update,state,type 
+		FROM payment_customer_bank 
+		where customer_no=#{customerNo} and state &gt; 0
+	</select>
+	<update id="disableStateByCustomerNo" parameterType="com.hzfh.api.p2pCustomer.model.PaymentCustomerBank">
+		update payment_customer_bank set 
+		state=0
+		where customer_no=#{customerNo} and state=2
+	</update>
+	<update id="unbindingStateByCustomerNo" parameterType="com.hzfh.api.p2pCustomer.model.PaymentCustomerBank">
+		update payment_customer_bank set 
+		state=2
+		where customer_no=#{customerNo} and state=1
+	</update>
+	<select id = "getStateByCustomerNo" parameterType = "int" resultType = "int">
+		select state from payment_customer_bank
+		where customer_no = #{customerNo}
+	</select>
+	<update id = "updateTypeByCustomerNo">
+		update payment_customer_bank
+		set type = #{type}
+		where customer_no = #{customerNo}
+	</update>
+	<update id = "updateStateByCustomerNo">
+		update payment_customer_bank
+		set state = 0
+		where customer_no = #{customerNo} and state = 1
+	</update>
+	<update id="updateForBindingStateByCustomerNo" parameterType = "com.hzfh.api.p2pCustomer.model.PaymentCustomerBank">
+		update payment_customer_bank 
+		set sn=#{sn},bank_name=#{bankName},bank_code=#{bankCode},
+			bank_card=#{bankCard},in_time=current_timestamp(),time_update=current_timestamp(),state=1
+		where customer_no=#{customerNo} and state = 0
+	</update>
+	
+	<update id = "updateBankStateByCustomerNo">
+		update payment_customer_bank
+		set state = 0
+		where customer_no = #{customerNo}
+	</update>
+	
+</mapper>

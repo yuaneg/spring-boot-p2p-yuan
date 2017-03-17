@@ -1,0 +1,41 @@
+webInfo:
+ webp2pwww: http://fronttest.518investor.com:8063/newP2p
+ #webp2prestService: http://www.518investor.com:8064/rest-p2p
+ webp2prestService: http://192.168.1.19:8080
+ webp2psignUrl: http://192.168.1.103:8088
+ webp2pbackwww: http://192.168.1.18:8080/p2p_back
+ 
+ webp2pupload: http://192.168.1.159\:8081/temp
+ webupload: http://upload.hzfh.test/files
+ webimg: http://upload.hzfh.test/files
+ webbackurl: http://fronttest.518investor.com:8063/newP2p
+ 
+ webP2pResourceImg: http://upload.hzfh.test/files/new_p2p_diagram
+ 
+ paymenturlgateway: https://member.yeepay.com/member/bha
+ paymenturlconnection: https://member.yeepay.com/member/bhaexter/bhaController
+ paymenturlgatewayApp: http://220.181.25.233:8081/member/bhawireless
+ paymenturlgatewayTest: http://220.181.25.233:8081/member/bha
+ paymenturlconnectionTest: http://220.181.25.233:8081/member/bhaexter/bhaController
+ paymentsignname: cfca.pfx
+ paymentsignpsw: jinkong@20150617
+ webuploadaction: http://upload.chineseinvestor.com.cn/upload.action
+ webPlatformUserNotype: test
+ webredis: dev
+ webYeepayPlatformNo: 11240012345
+ webYeepayVerifySign: 0
+ 
+ CGTrequestUrlGateway: http://220.181.25.233:8602/bha-neo-app/lanmaotech/gateway
+ CGTrequestUrlConnection: http://220.181.25.233:8602/bha-neo-app/lanmaotech/service 
+ CGTplatformNo: 3000000104
+ CGTkeySerial: 1
+ CGTpublicKey1: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA00+j7ch0nqFFU3GABCLVq9kUySdp8rnKpNMIg/q2p1oCOlpm88HGroI0p8/iaLPSrzATAZRf0PNqsW+NNRPGTabqvyj7Voh0p6EYzV8aV2GmzPm6J6l3f3DoXr56jFsTzB2tct3wG8PWsrWFTFmNRAiV7B++l3GYdbIR2NNuPfTvsYGlhXwGR3oCL6VFKdrE0bslqTvetDRqVTvUmY5uTnUZ5o9vOCahsgrdLapfo5YA8M6p9JC2mQP2y0ogVyecRZ/lfjXQx9Ll9R4qrZfKMin8R1rigeiplrTZ884oNNibKMtgBWI7AfeLoW02JniQMgPcjKWx9MQVtOOMvrFlUQIDAQAB
+ CGTprivateKey1: MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDRs9CjCAOtz9xURG7lTqStE+YjUHf0NWNXkJ0P1F1bbjOcpxrjQP83WcOxZJRspf2EeyG10qp9Z1xI8i3ol1D3992WaW36AX/eTTd0XL6aAjPA9g+wPIau+1bIjuojVbfrevru9APV1BT8j7hhchV4th0MS5aZPYx5J82tvLgjSHVxC6F2/XUJNgmJGK0OfRD+0fO8L4ZpxqLYeQTNQKlTUCa9QRAc1mIUq9vlVM9gCuAQT/+QfHIzgxEDRRff+N/aVplp/GHYw7b+mIX6D+7CxNdLeShplHP1cGW4kfVnmZ3BEh2i29HSD9tzPAF0raV1bYRoZ/IaDaeMZHLBGvI/AgMBAAECggEBAIrq2uDVk1JWa7grKWegxHifwQpN6VkO8QN2GoX9AedqxqgVDzvSt/9b6MagQa8D+0EDLN69cxHmIf106bK2Yv4R5moY57EBw0ppzr24Hs/5e31txBDU18gdWm08N6E2zMMjUg5v+gZyG4EAWH29TLoNsoqNnHNhkahFFPzuEvHTgFYeX/ucCGY9qa4j+c5f3f/xqY9aMOLGu8zxdmdA/8zYJXMt8TaXlSN58S5KifdiIYWbdoYxlBFjVcw7WGHdNVqVCo7ST9KDUL0AIt3/87esDdaeizOGBtV9wxTqv89R2GPpb7jcXavtf5BvBxyb6txHQxxOkc+GHHfWimsw77kCgYEA7ms7wEfxnpdx/wLRtXh8orFgK0FuRX948lQAo4e0l2auWuRtmxaiQFFvXe/9ZJZUUE1cQRqcqApW/gvKQERNfyqhYb9zynbC3sC7Ds7jcyM/lIW1MvFiI5IOCQUmncHZ2HCS+14Arr1EE8VttP8tqFf6VnvzVU4NzKhcMKAVouUCgYEA4Sp8DB9tFYG3Nesp8EcsF8PzNETWifBNc0QE4bHn/dFj3+M1IzZBjdi6liUO6UmoEwDUtyUSn2AdNq9Sk6YV0MgU/qiowmA1vc4wxe2vb5EcVAQblUW27o+X4EduKx86AK7BJG/pjRCLKA8VibV6SLI80op/Xf3qGMIJ1ks+elMCgYEAyifwnQQjklZVWWX5jMah341IvsSXDKSeV9L0S7SYYru04OrJKPRTFPg31s3T7EMvMHu32pgG9tD1nClBD6caktYBypD8TFLQvvFqao7v+sOLeJK65nwXu5NvBSTx7lfdMBGb/zlgmMlwfNctQ4gPHaujX0twMweg2cRzjuNeFSUCgYEApzH82qObRJUFjiwJADpZK2x9cxqKk/K0EBs55L1OHtMU7nKwSm1HUCTWqBbsc54WB8ZeLYCBy4Z7KtgU4T46hMWNkWt7pJn8TeyFmvNbieSevGQwdy9FHu/RPuDLlYmicE9Ta9MOAYl/S0eoHpF7M+/l6hCdcxXQdoHe/BjzU7ECgYAKZZLaoFq4DLM+Bm0XbhmbRton4R5PN0m50guViS+gaMvNiuDCWuAfGp3BzJUXRdBFhuWwO/+AmGNIGZVqhg7lUje3lkzireDNa8Jx7JOsO3IGPSxAGeIF/TPsg/60rFvx1vfFRolZzZXh81axKpKqciXDqCmkveWiE/3byxGO5g==
+ CGTpublicKeySign: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq7ELDNKaEo653CqDmMY3poQ/2oRVYtoF0rwSe21AZYAthdeQlTeSky8TmxCrxm7/FZUqhc7NCqFND462MyO/WC8gz7SoTx9SkfvpyYUR95lCYu5AQaSz5t3/XxlABvAirwdthxVIsbVp8z+COlce/deQCTM6HSDbQj5iwAWEOMkoFvsQdP7Dag0BI+SnRrGW7jqCouBokBw4Jje1TGqSVQuYG/f/THuSL5w3bqVqS6iCGxowfuXqqagANt7kV049Q4L+dkCJe8Ruc2PqamszvId5xhYw5qx5/qTvSRjRxX9NlDw457wrwjIr/Vx3qY7802XJhBRQ3YBk5aGBfCicjQIDAQAB 
+ 
+
+ WdxhUrl: http://test.bjp2p.com.cn:8843/platformService?wsdl 
+ wdxhUser: witzws
+ wdxhPWD: EA7ABB623814
+ wdxhSouceCode: BJ20170104001
+ 

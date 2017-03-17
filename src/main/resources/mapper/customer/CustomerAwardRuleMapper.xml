@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzfh.rest_p2p.customer.mapper.CustomerAwardRuleMapper">
+	<resultMap type="com.hzfh.api.p2pCustomer.model.CustomerAwardRule" id="resultMapCustomerAwardRule">
+		<result property="id" column="id"/>
+		<result property="ruleType" column="rule_type"/>
+		<result property="couponId" column="coupon_id"/>
+		<result property="couponExpiryDate" column="coupon_expiry_date"/>
+		<result property="sourceType" column="source_type"/>
+		<result property="sourceName" column="source_name"/>
+		<result property="ruleEffectiveDate" column="rule_effective_date" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+		<result property="ruleDeadline" column="rule_deadline" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
+	</resultMap>
+	<select id="getList" resultMap="resultMapCustomerAwardRule">
+		SELECT id,rule_type,coupon_id,coupon_expiry_date,source_type,source_name,rule_effective_date,rule_deadline
+		FROM customer_award_rule
+	</select>
+	<select id="getPagingList" resultMap="resultMapCustomerAwardRule" parameterType="com.hzfh.api.p2pCustomer.model.query.CustomerAwardRuleCondition" statementType="STATEMENT">
+		SELECT id,rule_type,coupon_id,coupon_expiry_date,source_type,source_name,rule_effective_date,rule_deadline FROM customer_award_rule where 1=1
+		ORDER BY
+		<foreach item="item" collection="sortItemList" separator=",">
+			${item.sortFeild} ${item.sortType}
+		</foreach>
+		LIMIT ${startIndex},${pageSize}
+	</select>
+	<select id="getTotalCount" resultType="long" parameterType="com.hzfh.api.p2pCustomer.model.query.CustomerAwardRuleCondition" statementType="STATEMENT">
+		SELECT count(1) FROM customer_award_rule where 1=1
+	</select>
+	<select id="getInfo" resultMap="resultMapCustomerAwardRule" parameterType="int">
+		SELECT id,rule_type,coupon_id,coupon_expiry_date,source_type,source_name,rule_effective_date,rule_deadline FROM customer_award_rule where id=#{id}
+	</select>
+	<insert id="add" parameterType="com.hzfh.api.p2pCustomer.model.CustomerAwardRule" useGeneratedKeys="true" keyProperty="id">
+		insert into customer_award_rule
+		(rule_type,coupon_id,coupon_expiry_date,source_type,source_name,rule_effective_date,rule_deadline)
+		values
+		(#{ruleType},#{couponId},#{couponExpiryDate},#{sourceType},#{sourceName},#{ruleEffectiveDate},#{ruleDeadline})
+	</insert>
+	<update id="update" parameterType="com.hzfh.api.p2pCustomer.model.CustomerAwardRule">
+		update customer_award_rule set 
+		rule_type=#{ruleType},coupon_id=#{couponId},coupon_expiry_date=#{couponExpiryDate},source_type=#{sourceType},source_name=#{sourceName},rule_effective_date=#{ruleEffectiveDate},rule_deadline=#{ruleDeadline}
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from customer_award_rule where id = #{id}
+	</delete>
+	<select id="getAwardByRuleType" resultMap="resultMapCustomerAwardRule" parameterType="int">
+		SELECT id,rule_type,coupon_id,coupon_expiry_date,source_type,source_name,rule_effective_date,rule_deadline
+		FROM customer_award_rule where rule_type = #{type} and date_format(rule_deadline,'%Y-%m-%d') &gt;= date_format(current_timestamp(),'%Y-%m-%d') and date_format(rule_effective_date,'%Y-%m-%d') &lt;= date_format(current_timestamp(),'%Y-%m-%d')
+	</select>
+	
+	<select id="getInfoByCouponId" resultMap="resultMapCustomerAwardRule" parameterType="int">
+		SELECT id,rule_type,coupon_id,coupon_expiry_date,source_type,source_name,rule_effective_date,rule_deadline FROM customer_award_rule where coupon_id = #{couponId}
+	</select>
+</mapper>
