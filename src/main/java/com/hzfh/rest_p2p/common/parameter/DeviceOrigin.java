@@ -6,6 +6,5 @@ public enum DeviceOrigin {
 	ANDROID,
 	IPHONE,
 	IPAD,
-	TABLE,
-	
+	TABLE
 }

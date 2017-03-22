@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzfh.rest_p2p.system.mapper.SysParameterMapper">
-	
-    <select id="getParameterByKey" resultType="String" parameterType="String">
-        select sys_value from sys_parameter 
-        where sys_key = #{key}       
-    </select>
-</mapper>

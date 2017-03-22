@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.github.pagehelper.PageHelper;
@@ -24,6 +25,7 @@ import com.github.pagehelper.PageHelper;
  * Created by paul on 16/7/23.
  */
 @Configuration
+@EnableTransactionManagement
 @MapperScan(basePackages = "com.hzfh.rest_p2p.*.mapper")
 public class MybatisConfig implements EnvironmentAware {
        
@@ -73,15 +75,15 @@ public class MybatisConfig implements EnvironmentAware {
         return fb.getObject();
     }
     
+    
     @Bean
-    public DataSourceTransactionManager testTransactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
-    @Bean
-    public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    public SqlSessionTemplate SqlSessionTemplate(@Qualifier("SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-
+    
+    @Bean
+    public DataSourceTransactionManager TransactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
 
 }

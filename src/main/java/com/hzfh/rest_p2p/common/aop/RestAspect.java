@@ -5,6 +5,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import com.alibaba.fastjson.JSONObject;
+import com.hzfh.rest_p2p.common.parameter.DeviceOrigin;
+import com.hzfh.rest_p2p.common.until.RSAUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -19,7 +22,8 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import com.hzfh.rest_p2p.common.until.CheckSignature;
-import com.hzframework.helper.DateHelper;
+import com.hzfh.rest_p2p.common.until.DeviceKeyUtil;
+
 
 /**
  * @author 袁恩光 AOP类
@@ -62,7 +66,7 @@ public class RestAspect {
 		sb.append("method:" + request.getMethod() + ",");
 		sb.append("uri:" + request.getRequestURI() + ",");
 		sb.append("queryString:" + request.getQueryString() + ",");
-		sb.append("time:" + DateHelper.getCurrentTime());
+		sb.append("time:" + System.currentTimeMillis());
 		logger.info(sb.toString());
 	}
 
@@ -105,10 +109,25 @@ public class RestAspect {
 				}
 			}
 		}
+		
+		//获取传入设备类型
+        String deviceOriginStr = request.getParameter(DEVICE_ORIGIN);
+        DeviceOrigin deviceOrigin = DeviceOrigin.valueOf(deviceOriginStr);
+        //根据设备类型获取传入的字符串
+		String rsaStr = DeviceKeyUtil.getDeviceKey(deviceOrigin);
+		String prostr =  RSAUtils.RSADecode(sign,rsaStr);
+		//rsa 验签方式
+		if(!JSONObject.toJSONString(m).equals(prostr)){
+			throw new Exception("【验签失败】methodName:" + method.getDeclaringClass().getName() + "." + method.getName()
+					+ "||parameters:" + m.toString() + "||" +
+					"sign:" + sign);
+		}
+		//md5验签
 		if (!CheckSignature.check(m, sign)) {
 			throw new Exception("【验签失败】methodName:" + method.getDeclaringClass().getName() + "." + method.getName()
 					+ "||parameters:" + m.toString() + "||sign:" + sign);
 		}
 	}
+
 
 }

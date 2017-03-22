@@ -1,10 +1,9 @@
 spring:
  profiles.active: expand
  aop.auto: true
-pageHelper:
+pageHelper: 
  offsetAsPageNum: true
  rowBoundsWithCount: true
  reasonable: false
 logging:
-  config: classpath:log4j.properties
-  
+  config: classpath:logback.xml
